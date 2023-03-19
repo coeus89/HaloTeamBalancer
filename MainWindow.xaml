@@ -1,0 +1,44 @@
+﻿<Window x:Class="Halo_Team_Balancer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Halo Infinite Team Balancer" Height="700" Width="525">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="3*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Vertical" Margin="5">
+            <Button x:Name="SeparateTeamsButton" Content="Separate Teams" Click="SeparateTeamsButton_ClickAsync" Margin="0,10,0,5"/>
+            <Button x:Name="ClearTeamsButton" Content="Clear Teams" Click="ClearTeamsButton_Click_Async"  Margin="0,5,0,10"/>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Orientation="Vertical" Margin="5">
+            <TextBlock Text="Stats" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <TextBox x:Name="ResultTextBox" Grid.Row="1" Margin="5"/>
+            <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="5">
+                <StackPanel Orientation="Vertical" Width="auto">
+                    <TextBlock Text="Blue Team" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    <ListBox x:Name="BlueTeamListBox" ScrollViewer.VerticalScrollBarVisibility="Visible" Grid.Row="2" Margin="5"></ListBox>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Width="auto">
+                    <TextBlock Text="Red Team" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    <ListBox x:Name="RedTeamListBox" ScrollViewer.VerticalScrollBarVisibility="Visible" Grid.Row="2" Margin="5"></ListBox>
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+
+        <StackPanel Grid.Row="3">
+            <TextBlock Grid.Row="3" Text="Players To Sort" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <ListBox x:Name="SelectedPlayerListBox" ScrollViewer.VerticalScrollBarVisibility="Visible" Grid.Row="3" Margin="5"></ListBox>
+        </StackPanel>
+
+        <StackPanel Grid.Row="4" Orientation="Vertical" Margin="5">
+            <TextBlock Grid.Row="4" Text="All Players" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <ListBox x:Name="PlayersListBox" Grid.Row="4" Margin="5" ScrollViewer.VerticalScrollBarVisibility="Visible" MouseDoubleClick="PlayersListBox_MouseDoubleClick_Async" Keyboard.KeyDown="PlayersListBox_KeyDown_Async" ></ListBox>
+        </StackPanel>
+    </Grid>
+</Window>
+
