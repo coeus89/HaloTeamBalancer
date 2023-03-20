@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
+using Excel = Microsoft.Office.Interop.Excel;
 
 
 namespace Halo_Team_Balancer
@@ -53,6 +54,7 @@ namespace Halo_Team_Balancer
 
         private async void LoadPlayersAsync(Dictionary<string, Player> pDict)
         {
+            pDict.Clear();
             string folder = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
             //string folder = "D:\\Projects\\Halo_Team_Balancer";
             folder += "\\settings\\Players.csv";
@@ -259,6 +261,36 @@ namespace Halo_Team_Balancer
         private async void ClearTeamsButton_Click_Async(object sender, RoutedEventArgs e)
         {
             await this.Dispatcher.BeginInvoke(delClrTxt);
+        }
+
+        private async void OpenCSVButton_Click_Async(object sender, RoutedEventArgs e)
+        {
+            string folder = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
+            //string folder = "D:\\Projects\\Halo_Team_Balancer";
+            folder += "\\settings\\Players.csv";
+
+            await Task.Run(() => 
+            {
+                try
+                {
+                    Excel.Application objExcel = new Excel.Application();
+                    objExcel.Workbooks.OpenText(folder, Comma: true);
+                    objExcel.Visible = true;
+                }
+                catch (Exception ex)
+                {
+                    this.Dispatcher.Invoke(delMsg, "Something happened and " +
+                        "you were unable to open the csv file with excel. " +
+                        "Ensure you have microsoft excel installed and registered.");
+                }
+            });
+            
+        }
+
+        private async void RefreshButton_Click_Async(object sender, RoutedEventArgs e)
+        {
+            loadPlayers = Task.Run(() => LoadPlayersAsync(playerDict));
+            await loadPlayers;
         }
     }
 
