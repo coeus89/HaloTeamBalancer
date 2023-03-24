@@ -265,23 +265,29 @@ namespace Halo_Team_Balancer
 
         private async void OpenCSVButton_Click_Async(object sender, RoutedEventArgs e)
         {
-            string folder = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
+            string file_path = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
             //string folder = "D:\\Projects\\Halo_Team_Balancer";
-            folder += "\\settings\\Players.csv";
+            file_path += "\\settings\\Players.csv";
 
             await Task.Run(() => 
             {
                 try
                 {
                     Excel.Application objExcel = new Excel.Application();
-                    objExcel.Workbooks.OpenText(folder, Comma: true);
+                    objExcel.Workbooks.OpenText(file_path, Comma: true);
                     objExcel.Visible = true;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    this.Dispatcher.Invoke(delMsg, "Something happened and " +
-                        "you were unable to open the csv file with excel. " +
-                        "Ensure you have microsoft excel installed and registered.");
+                    //this.Dispatcher.Invoke(delMsg, "Something happened and " +
+                    //    "you were unable to open the csv file with excel. " +
+                    //    "Ensure you have microsoft excel installed and registered." +
+                    //    ex.Message);
+                    Process.Start("notepad.exe", file_path);
+                }
+                finally
+                {
+                    
                 }
             });
             
