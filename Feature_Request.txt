@@ -1,0 +1,39 @@
+How to draw from the pool of players.
+Add and remove players via UI.
+Pull rank from API.
+Keep winning team
+
+==================================Discord Suggestion==============================================
+What I was saying in Tim's chat earlier is if you can have your program do more than just 2 teams. He can have as many people as he wants to join and it will generate as many 4 man teams necessary for how many players enter.
+
+I'm not a programmer so I'm not sure if what I'm suggesting is difficult, but basically how it would do the teams is lets say there are 16 players.
+
+Player 1: 1600
+Player 2: 1599
+Player 3: 1598
+Player 4: 1597
+Player 5: 1530
+Player 6: 1529
+Player 7: 1528
+Player 8: 1527
+Player 9: 1500
+Player 10: 1499
+Player 11: 1498
+Player 12: 1497
+Player 13: 1450
+Player 14: 1449
+Player 15: 1448
+Player 16: 1447
+
+What it would do is make teams via:
+
+Team A - Player 1
+Team B - Player 2
+Team C - Player 3
+Team D - Player 4
+
+(Top CSR out of all 16 players), then it repeats it and works backwards like a snake draft .. 5th highest rank goes Team D, 6th highest rank Team C, 7th highest Team B, 8th highest Team A, 9th highest Team A etc.. etc...
+===============================================================================================
+
+
+OG Richie - halo api

@@ -8,18 +8,21 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+
             <RowDefinition Height="3*"/>
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" Orientation="Vertical" Margin="5">
             <StackPanel Orientation="Horizontal">
-                <Button x:Name="SeparateTeamsButton" Content="Separate Teams" Click="SeparateTeamsButton_ClickAsync" Margin="5" Width="250"/>
-                <Button x:Name="ClearTeamsButton" Content="Clear Teams" Click="ClearTeamsButton_Click_Async"  Margin="5" Width="250"/>
+                <Button x:Name="SeparateTeamsButton" Content="Separate Teams" Click="SeparateTeamsButton_ClickAsync" Margin="5" Width="246"/>
+                <Button x:Name="ClearTeamsButton" Content="Clear Teams" Click="ClearTeamsButton_Click_Async"  Margin="5" Width="247"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <Button x:Name="OpenCSVButton" Content="Open Player CSV File" Click="OpenCSVButton_Click_Async"  Margin="5" Width="250"/>
-                <Button x:Name="RefreshButton" Content="Refresh Player List" Click="RefreshButton_Click_Async"  Margin="5" Width="250"/>
-
+                <Button x:Name="OpenCSVButton" Content="Open Player CSV File" Click="OpenCSVButton_Click_Async"  Margin="5" Width="246"/>
+                <Button x:Name="RefreshButton" Content="Refresh Player List" Click="RefreshButton_Click_Async"  Margin="5" Width="247"/>
+            </StackPanel>
+            <StackPanel>
+                <Button Content="Add Player" x:Name="btnShowAddPlayerTxtBox" Click="ShowAddPlayerTxtBox" Margin="5" Width="500"/>
             </StackPanel>
         </StackPanel>
         <StackPanel Grid.Row="1" Orientation="Vertical" Margin="5">
@@ -39,13 +42,43 @@
 
         <StackPanel Grid.Row="3">
             <TextBlock Grid.Row="3" Text="Players To Sort" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-            <ListBox x:Name="SelectedPlayerListBox" ScrollViewer.VerticalScrollBarVisibility="Visible" Grid.Row="3" Margin="5"></ListBox>
+            <ListBox x:Name="SelectedPlayerListBox" ScrollViewer.VerticalScrollBarVisibility="Visible" Grid.Row="3" Margin="5" Height="160"></ListBox>
         </StackPanel>
 
         <StackPanel Grid.Row="4" Orientation="Vertical" Margin="5">
+
             <TextBlock Grid.Row="4" Text="All Players" VerticalAlignment="Center" HorizontalAlignment="Center"/>
             <ListBox x:Name="PlayersListBox" Grid.Row="4" Margin="5" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True" MouseDoubleClick="PlayersListBox_MouseDoubleClick_Async" Keyboard.KeyDown="PlayersListBox_KeyDown_Async" MaxHeight="500" ></ListBox>
         </StackPanel>
+
+
+        <!-- It's important that this is in the end of the XAML as it needs to be on top of everything else! -->
+        <Grid x:Name="InputBox" Visibility="Collapsed">
+            <Grid Background="Black" Opacity="0.9">
+                <Border
+                MinWidth="250"
+                Background="Green" 
+                BorderBrush="Black" 
+                BorderThickness="1" 
+                CornerRadius="0,55,0,55" 
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Center">
+                    <StackPanel MinWidth="500">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Margin="5" Text="GamerTag: " FontWeight="Bold"></TextBlock>
+                            <TextBox MinWidth="250" HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="InputTextBox"/>
+                            <TextBlock Margin="5" Text="CSR: " FontWeight="Bold"></TextBlock>
+                            <TextBox MinWidth="250" HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="InputCSRBox"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Button x:Name="btnAddPlayer" Margin="5" Content="Add" Background="{x:Null}" MinWidth="100" Click="btnAddPlayer_Click_Async"/>
+                            <Button x:Name="CancelButton" Margin="5" Content="Cancel" Background="{x:Null}" MinWidth="100" Click="btnCancel_Click" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Grid>
     </Grid>
+    
 </Window>
 

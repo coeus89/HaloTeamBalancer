@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -25,13 +27,14 @@ namespace Halo_Team_Balancer
         Task loadRanks;
         delegate void DelMessageBox(string message);
         DelMessageBox delMsg = null;
-        delegate void DelPlayers(List<string> players);
+        delegate void DelPlayers(List<Player> players);
         DelPlayers delShowPlayers = null;
         DelPlayers delShowSelectedPlayers = null;
         delegate void DelUpdateResults(string txt);
         DelUpdateResults delUpdateResultsTextBox = null;
         delegate void DelUpdateRB(List<Player> Blue, List<Player> Red);
         DelUpdateRB delUpdateRBTextBox = null;
+        delegate (string, string) getTxtBoxValues();
         Action delClrTxt;
 
         public MainWindow()
@@ -68,12 +71,12 @@ namespace Halo_Team_Balancer
                     var line = await reader.ReadLineAsync();
                     var values = line.Split(',');
 
-                    Player player = new Player(values[0], Int32.Parse(values[1]));
+                    Player player = new Player(values[0].ToLower(), Int32.Parse(values[1]));
                     pDict.Add(player._name, player);
                 }
                 reader.Close();
             }
-            this.Dispatcher.Invoke(delShowPlayers, pDict.Keys.ToList<string>());
+            this.Dispatcher.Invoke(delShowPlayers, pDict.Values.ToList<Player>());
         }
 
         private async Task LoadRanksAsync(Dictionary<string, int> rDict)
@@ -90,6 +93,7 @@ namespace Halo_Team_Balancer
                     rDict.Add(values[0], Int32.Parse(values[1]));
 
                 }
+                reader.Close();
             }
         }
 
@@ -188,7 +192,7 @@ namespace Halo_Team_Balancer
             RedTeamListBox.ItemsSource = RedTeam;
         }
 
-        private void UpdatePlayersListBox(List<string> players)
+        private void UpdatePlayersListBox(List<Player> players)
         {
             PlayersListBox.ItemsSource = players;
 
@@ -200,7 +204,7 @@ namespace Halo_Team_Balancer
 
         }
 
-        private void UpdateSortListBox(List<string> players)
+        private void UpdateSortListBox(List<Player> players)
         {
             SelectedPlayerListBox.ItemsSource = players;
 
@@ -221,7 +225,7 @@ namespace Halo_Team_Balancer
                     //MessageBox.Show("You clicked on item " + index);
                     string pname = (playerDict.Keys.ToList<string>())[index];
                     selectedPlayerDict.Add(pname, playerDict[pname]);
-                    await this.Dispatcher.BeginInvoke(delShowSelectedPlayers, selectedPlayerDict.Keys.ToList<string>());
+                    await this.Dispatcher.BeginInvoke(delShowSelectedPlayers, selectedPlayerDict.Values.ToList<Player>());
                 }
             }
             catch (ArgumentException aex)
@@ -293,10 +297,155 @@ namespace Halo_Team_Balancer
             
         }
 
+        private void clearInputTextBox()
+        {
+            // Clear InputBox.
+            InputTextBox.Text = String.Empty;
+            InputCSRBox.Text = String.Empty;
+        }
+
         private async void RefreshButton_Click_Async(object sender, RoutedEventArgs e)
         {
             loadPlayers = Task.Run(() => LoadPlayersAsync(playerDict));
             await loadPlayers;
+        }
+
+        private void ShowAddPlayerTxtBox(object sender, RoutedEventArgs e)
+        {
+            // CoolButton Clicked! Let's show our InputBox.
+            InputBox.Visibility = System.Windows.Visibility.Visible;
+        }
+
+        private void hideTextBox()
+        {
+            // YesButton Clicked! Let's hide our InputBox and handle the input text.
+            InputBox.Visibility = System.Windows.Visibility.Collapsed;
+            InputTextBox.Focus();
+        }
+
+        private void collapseInputBox()
+        {
+            InputBox.Visibility = System.Windows.Visibility.Collapsed;
+        }
+
+        private (string, string) getTxtBoxValue()
+        {
+            string txt = string.Empty;
+            string txt2 = string.Empty;
+
+            try
+            {
+                if (InputTextBox.Text != string.Empty && InputCSRBox.Text != string.Empty) 
+                {
+                    txt = InputTextBox.Text;
+                    txt2 = InputCSRBox.Text;
+                }
+                else
+                {
+                    throw new ArgumentException();
+                }
+            }
+            catch (ArgumentException aex)
+            {
+                this.Dispatcher.Invoke(delMsg, "The Gamertag and CSR must be filled in." + aex.Message);
+                //MessageBox.Show(@"you've already added that player to the teams list.");
+            }
+            
+            return (txt, txt2);
+        }
+
+        private async void btnAddPlayer_Click_Async(object sender, RoutedEventArgs e)
+        {
+
+            await this.Dispatcher.BeginInvoke(()=> { hideTextBox(); });
+            // Do something with the Input
+            string gamerTag = string.Empty;
+            string csr = string.Empty;
+
+            gamerTag = await InputTextBox.Dispatcher.InvokeAsync(() => InputTextBox.Text.ToLower());
+            csr = await InputCSRBox.Dispatcher.InvokeAsync(() => InputCSRBox.Text);
+            Player player = new Player(gamerTag.Trim(), Int32.Parse(csr.Trim()));
+            string txtToWrite = gamerTag.Trim() + ',' + csr.Trim();
+
+            await Task.Run(async () => 
+            {
+
+                try
+                {
+                    string folder = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
+                    folder += "\\settings\\Players.csv";
+                    var pDict = playerDict;
+
+                    if (playerDict.ContainsKey(player._name))
+                    {
+
+
+                        string path = folder;
+                        string[] lines = File.ReadAllLines(path);
+
+                        for (int i = 0; i < lines.Count(); i++)
+                        {
+                            var line = lines[i];
+                            var vals = line.Split(',');
+                            if (vals[0].ToLower() == player._name)
+                            {
+                                lines[i] = player._name + "," + player._csr;
+                                break;
+                            }
+                        }
+                        File.WriteAllLines(path, lines);
+
+                        ////File.Delete(folder);
+                        //Thread.Sleep(100);
+                        pDict[player._name] = player;
+                        //FileStream fs = new FileStream(folder, FileMode.OpenOrCreate, FileAccess.Write);
+                        //long endPoint = fs.Length;
+                        //using (var writer = new StreamWriter(folder, false))
+                        //{
+                        //    await writer.WriteLineAsync("Gamertag,CSR");
+                        //    foreach (var player in pDict.Values)
+                        //    {
+                                
+                        //        await writer.WriteLineAsync(player._name + "," + player._csr.ToString());
+                        //    }
+                        //    writer.Close();
+
+                        //}
+                        //fs.Close();
+                    }
+                    else
+                    {
+                        playerDict.Add(player._name, player);
+                        FileStream fs = new FileStream(folder, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
+                        long endPoint = fs.Length;
+                        fs.Seek(endPoint, SeekOrigin.End);
+                        using (var writer = new StreamWriter(fs))
+                        {
+                            writer.WriteLine(txtToWrite);
+                            writer.Close();
+                        }
+                        fs.Close();
+                    }
+
+                    await Dispatcher.BeginInvoke(delShowPlayers, playerDict.Values.ToList<Player>());
+                }
+                catch (Exception ex)
+                {
+                    await this.Dispatcher.BeginInvoke(delMsg, ex.Message);
+
+                }
+            });
+            // Clear InputBox.
+            await this.Dispatcher.BeginInvoke(() => { clearInputTextBox(); });
+        }
+
+        private void btnCancel_Click(object sender, RoutedEventArgs e)
+        {
+            // NoButton Clicked! Let's hide our InputBox.
+            collapseInputBox();
+
+            // Clear InputBox.
+            clearInputTextBox();
         }
     }
 
