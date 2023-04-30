@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AppInstaller
+	Uri="file:///C:/downloads/Halo_Team_Balancer/Halo_Team_Balancer_Installer.appinstaller"
+	Version="1.2.2.0" xmlns="http://schemas.microsoft.com/appx/appinstaller/2017/2">
+	<MainBundle
+		Name="740f0d47-426d-4f7b-bf16-0536a33e0a14"
+		Version="1.2.2.0"
+		Publisher="CN=Jonathan Karamavros"
+		Uri="file:///C:/downloads/Halo_Team_Balancer/Halo_Team_Balancer_Installer_1.2.2.0_Test/Halo_Team_Balancer_Installer_1.2.2.0_x64.msixbundle" />
+	<UpdateSettings>
+		<OnLaunch
+			HoursBetweenUpdateChecks="0" />
+	</UpdateSettings>
+</AppInstaller>

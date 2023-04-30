@@ -23,5 +23,8 @@
       <EmbedInteropTypes>true</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="DataLayer\" />
+  </ItemGroup>
 
 </Project>

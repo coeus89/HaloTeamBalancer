@@ -1,0 +1,2 @@
+MainPackage=D:\Projects\HaloTeamBalancer\Halo_Team_Balancer_Installer\bin\x64\Release\Halo_Team_Balancer_Installer_1.2.2.0_x64.msix
+SymbolPackage=D:\Projects\HaloTeamBalancer\Halo_Team_Balancer_Installer\obj\x64\Release\Symbols\Halo_Team_Balancer_Installer_1.2.2.0_x64.appxsym
